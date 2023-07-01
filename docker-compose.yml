@@ -1,0 +1,7 @@
+ 
+services:
+   tom: 
+
+             ports:
+              - "80:8080" 
+  

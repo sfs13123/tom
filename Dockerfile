@@ -1,7 +1,14 @@
-FROM openjdk:21-slim-buster
-RUN apt update
-RUN apt install -y curl
-RUN curl -L https://public.bl.files.1drv.com/y4m4xuWOnsi0GpE5xRQF3HqByC7-qdRFOLw5bpElRBELVMMkXiVNqo5kB9M0_owdCqxf1Xpxox8kVIYpzqrZOJMv1jUq7vBSB2BCXr7SLlyC32-_oaclu1PZksL69ErXrxSuWzpNtOmpoa_HHn80DVIR1sCOvZ4AwLtyaB5yhwHfR8xiJuJMjn-g2Hqa8ubDlwQVpIUHiBwH3HwcWgWfDDZ5w0lsX8DhfsXXA38tgkrR9o?AVOverride=1 -o p.war
- 
-CMD ["java", "-jar", "p.war"]
-EXPOSE 8080
+FROM ubuntu:latest
+# Install SSH server
+RUN apt-get update && \
+ apt-get install -y openssh-server
+# Create an SSH user
+RUN useradd -rm -d /home/sshuser -s /bin/bash -g root -G sudo -u 1000 sshuser
+# Set the SSH user's password (replace "password" with your desired password)
+RUN echo 'sshuser:password' | chpasswd
+# Allow SSH access
+RUN mkdir /var/run/sshd
+# Expose the SSH port
+EXPOSE 22
+# Start SSH server on container startup
+CMD ["/usr/sbin/sshd", "-D"]
